@@ -1,0 +1,151 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
+    <title>Programming Lab 1</title>
+  </head>
+
+  <body>
+    <div style="text-align: center;">
+      <h1>Programming Lab 2: Prenex Conjunctive Normal Form</h1>
+
+      <p><b>Submission deadline: Friday, May xx (11:59 p.m.)</b></p>
+    </div>
+
+    <h3>TA: Diego Alejandro Montoya-Zapata</h3>
+
+    <h3>Introduction</h3>
+
+    <div style="text-align: left;">
+    <p>The aim of this programming assignment is to write a <a href=
+    "https://www.haskell.org">Haskell</a> program that translates
+     a predicate logic formula into its prenex conjunctive normal
+     form.</p>
+    </div>
+
+    <h3>Assignment (80%)</h3>
+
+    <ul style="text-align: left;">
+      <li>Download the <a href="https://github.com/">GitHub</a>
+      repository <a href=
+      "https://github.com/afl-eafit/2013-2-lab1">cb0081-2013-2-lab1</a>.
+
+      <ul>
+        <li>The module <code>EAFIT.CB0081.Data.NFA</code> implements a
+        non-deterministic finite automaton.</li>
+
+        <li>The module <code>EAFIT.CB0081.Data.NFA.Examples</code>
+        gives an example of the data type <code>NFA</code>.</li>
+      </ul>
+      </li>
+
+      <li>(35%) Using the module <code>EAFIT.CB0081.Data.NFA</code>,
+      define a function
+      <pre>
+        empty :: NFA state symbol -&gt; Bool
+        </pre>
+        that test whether L(NFA) = ∅.<br/> Using the module
+        <code>EAFIT.CB0081.Data.NFA.Examples</code>, for example,
+        <pre>
+          GHCi&gt; empty emptyNFA
+          True
+          GHCi&gt; empty nonemptyNFA
+          False
+        </pre>
+      </li>
+
+    <li>(35%)  Oral exposition. Answers and explanations given to the
+    teacher and teacher assistant in the revision of the lab.</li>
+
+    <li>(10%) Annotate your source code in a way that explains your
+    solution for the assignment. Improve it with <a href=
+    "http://community.haskell.org/~ndm/hlint/">HLint</a>.</li>
+  </ul>
+
+  <h3>Clean code (10%)</h3>
+
+  <div style="text-align: left;">
+    Before submitting your code, clean it up! Clean code:
+
+    <ul>
+      <li>Does not have long lines (at most 80 columns).</li>
+
+      <li>Has a consistent layout.</li>
+
+      <li>Has type signatures for everything.</li>
+
+      <li>Has good comments.</li>
+
+      <li>Has no junk (unused code, commented code, unnecessary
+      code).</li>
+
+      <li>Has no overly complicated function definitions.</li>
+
+      <li>Does not contain any repetitive code.</li>
+
+      <li> Has no unnecessary spaces at the end of a line, or empty
+      lines at the end of a file (see:
+      <a href="http://www1.eafit.edu.co/asr/tips-and-tricks.html#fixing-trailing-whitespace-issues">
+      Fixing trailing whitespace issues with Emacs </a>)
+      </li>
+    </ul>
+  </div>
+
+  <h3>Submission (10%)</h3>
+
+  <div style="text-align: left;">
+    <p>Submission is electronic. Send an email to
+    <tt>asicard(at)eafit(dot)edu(dot)co</tt> and
+    <tt>dmonto39(at)eafit(dot)edu(dot)co</tt> and attach a compressed
+    file (.zip or .tar.gz) with your solution.</p>
+
+    <p>Your submission has to include the following:</p>
+
+    <ul>
+      <li><code>PCNF.hs</code>, a <a href=
+      "http://www.haskell.org">Haskell</a> module file with your solution for
+      the assignment.</li>
+
+      <li>
+        <code>README.txt</code> (or <code>README.md</code>), a
+        file containing at least the following information:
+
+        <ul>
+          <li>The name of your program.</li>
+
+          <li>Your name.</li>
+
+          <li>A general description of your program.</li>
+
+          <li>Information on how to use your program.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <h3>Notes</h3>
+
+  <ul style="text-align: left;">
+    <li>The programming lab is individual.</li>
+
+    <li>You are to use the <a
+    href="http://www.haskell.org/platform/">Haskell Platform</a>
+    2013.2.0.0 or GHC ≥ 7.6.3.</li>
+
+    <li>You can add class constraints to the type signature of
+    <code>pcnf</code> if you need them.</li>
+  </ul>
+
+  <h3>Bibliography</h3>
+
+  <p>Ben-Ari, Mordechai (2012). Mathematical Logic for Computer
+    Science. 3rd ed. Springer.</p>
+
+  <p>van Dalen, Dirk (2013). Logic and Structure. 5th ed. Springer.</p>
+
+
+</body>
+</html>
