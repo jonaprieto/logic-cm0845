@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
-    <title>Programming Lab 1</title>
+    <title>Programming Lab 2</title>
   </head>
 
   <body>
@@ -24,9 +24,25 @@
     "https://www.haskell.org">Haskell</a> program that translates
      a predicate logic formula into its prenex conjunctive normal
      form.</p>
-    </div>
+    
+    <p>A formula is in prenex conjunctive normal form (PCNF) if it is of
+      the form </p>
+      <pre>
+       <i>Q<sub>1</sub>x<sub>1</sub> ... Q<sub>n</sub>x<sub>n</sub> M</i>
+      </pre>
+      <p>
+      where the <i>Q<sub>i</sub> </i>are quantifiers and <i>M</i>
+      is a quantifier-free formula in CNF. The (possibly empty) sequence 
+     <i> Q<sub>1</sub>x<sub>1</sub> ... Q<sub>n</sub>x<sub>n</sub></i> 
+      is the prefix and <i>M</i> is the matrix [Ben-Ari (2012), Definition 9.9
+       - van Dalen (2013), Definition 3.5.10]. 
+      Every formula in predicate logic can be transformed into an equivalent 
+      formula in PCNF [van Dalen (2013), Theorem 3.5.11].
+      </p>
 
+      </div>
     <h3>Assignment (80%)</h3>
+      
 
     <ul style="text-align: left;">
       <li>Download the <a href="https://github.com/">GitHub</a>
