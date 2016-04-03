@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
 "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -26,7 +26,7 @@
       <p>A formula is in PCNF if it is of the form</p>
 
       <pre>
-        Q<sub>1</sub>x<sub>1</sub> ... Q<sub>n</sub>x<sub>n</sub> M
+        <tt>Q<sub>1</sub>x<sub>1</sub> ... Q<sub>n</sub>x<sub>n</sub> M</tt>
       </pre>
 
       <p>where the <tt>Q<sub>i</sub></tt> are quantifiers and
@@ -45,30 +45,36 @@
     <ul style="text-align: left;">
       <li>Download the <a href="https://github.com/">GitHub</a>
       repository <a href=
-      "https://github.com/afl-eafit/2013-2-lab1">cb0081-2013-2-lab1</a>.
+      "https://github.com/asr/logic-cm0845/tree/master/lab2">logic-cm0845-
+       lab2</a>.
 
       <ul>
-        <li>The module <code>EAFIT.CB0081.Data.NFA</code> implements a
-        non-deterministic finite automaton.</li>
+        <li>The module <code>FOL</code> defines a data type for the
+        formulas in FOL.</li>
 
-        <li>The module <code>EAFIT.CB0081.Data.NFA.Examples</code>
-        gives an example of the data type <code>NFA</code>.</li>
+        <li>The module <code>Examples</code>
+        gives some examples of the data type <code>Formula</code>.</li>
+
+        <li> The module <code>CNF</code> has implementations of some steps 
+        to get the CNF from a formula in predicate logic. </li>
+
+        <li> The module <code>PCNF</code> has some help to solve the programming
+         lab.</li>
+
       </ul>
       </li>
 
-      <li>(35%) Using the module <code>EAFIT.CB0081.Data.NFA</code>,
+      <li>(35%) Using the module <code>FOL</code>,
       define a function
       <pre>
-        empty :: NFA state symbol -&gt; Bool
-        </pre>
-        that test whether L(NFA) = ∅.<br/> Using the module
-        <code>EAFIT.CB0081.Data.NFA.Examples</code>, for example,
-        <pre>
-          GHCi&gt; empty emptyNFA
-          True
-          GHCi&gt; empty nonemptyNFA
-          False
-        </pre>
+        pcnf :: Formula -&gt; Formula
+      </pre>
+        that returns the PCNF of a given formula in FOL.<br/>
+        You can use the modules <code>CNF</code> and <code>PCNF</code>,
+        although it is not mandatory.
+        If you decide to use these modules, fill in the blanks by replacing
+        the <b><code>undefined</code></b> in the module <code>PCNF</code>
+        with code of your own.
       </li>
 
     <li>(35%)  Oral exposition. Answers and explanations given to the
