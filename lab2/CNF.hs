@@ -10,14 +10,14 @@ import Data.List
 
 
 -- Removes bi-implications using the logical equivalence
---  α ⇒ β ≈ (α ⇒ β) ⇒ (β ⇒ α).
+--  α ⇒ β ≈ (α ⇒ β) ∧ (β ⇒ α).
 
 remBiimp :: Formula -> Formula
 remBiimp (Not f)       = Not $ remBiimp f
 remBiimp (And f1 f2)   = And (remBiimp f1) (remBiimp f2)
 remBiimp (Or f1 f2)    = Or (remBiimp f1) (remBiimp f2)
 remBiimp (Imp f1 f2)   = Imp (remBiimp f1) (remBiimp f2)
-remBiimp (Biimp f1 f2) = Imp (Imp nf1 nf2) (Imp nf2 nf1)
+remBiimp (Biimp f1 f2) = And (Imp nf1 nf2) (Imp nf2 nf1)
   where
     nf1, nf2 :: Formula
     nf1 = remBiimp f1
