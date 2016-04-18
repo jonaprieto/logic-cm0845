@@ -1,4 +1,5 @@
-module CNF where
+module CNF
+    where
 
 import FOL
 import Data.List

@@ -1,8 +1,9 @@
 -- @Author: JONATHAN STEVEN PRIETO CUBIDES
 -- @Date: 2016-04-17 09:50:39
--- @Last Modified time: 2016-04-18 01:17:59
+-- @Last Modified time: 2016-04-18 16:22:12
 
-module PCNF where
+module PCNF
+    where
 
 import FOL
 import CNF

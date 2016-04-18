@@ -1,4 +1,5 @@
-module FOL where
+module FOL
+  where
 
 -- A term in First-Order Logic
 data Term = Cons Int | Var Int | Func Int [Term]
@@ -6,7 +7,7 @@ data Term = Cons Int | Var Int | Func Int [Term]
 
 -- A formula in First-Order Logic
 data Formula =
-    Pred Int [Term]
+  Pred Int [Term]
   | Not Formula
   | And Formula Formula
   | Or Formula Formula
