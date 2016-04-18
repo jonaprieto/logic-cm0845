@@ -1,14 +1,12 @@
 module FOL where
 
-type Ft = Int
-
 -- A term in First-Order Logic
-data Term = Var Ft | F Ft [Term]
+data Term = Cons Int | Var Int | Func Int [Term]
   deriving (Show, Eq)
 
 -- A formula in First-Order Logic
 data Formula =
-    Pred Ft [Term]
+    Pred Int [Term]
   | Not Formula
   | And Formula Formula
   | Or Formula Formula
