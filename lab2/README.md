@@ -44,7 +44,7 @@ data Formula =
     deriving (Show, Eq)
 ``` 
 
-On this way, we can build up any formula given by the language, 
+On this way, we can build up any formula given by the language,
 like these ones:
 
 Defining some basic terms (variables):
@@ -74,7 +74,7 @@ let f1  = (Not (Exists x (Imp px (Forall x px))))
 ```
 
 Finally, if you need the prenex conjuctive normal form of a formula,
-the library provides you the method `pcnf::Formula -> Formula`. 
+the library provides you the method `pcnf::Formula -> Formula`.
 
 For instance, `pcnf` applies to the last example `f1`:
 
@@ -84,10 +84,10 @@ Prelude> pcnf  (Not (Exists x (Imp px (Forall x px))))
 gives you:
 
 ```Haskell
-Forall (Var 2) 
-    (Exists (Var 1) 
-            (And 
-                (Pred 0 [Var 2]) 
+Forall (Var 2)
+    (Exists (Var 1)
+            (And
+                (Pred 0 [Var 2])
                 (Not (Pred 0 [Var 1]))))
 ```
 
