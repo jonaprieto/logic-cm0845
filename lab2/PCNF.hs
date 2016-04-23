@@ -1,6 +1,6 @@
 -- @Author: JONATHAN STEVEN PRIETO CUBIDES
 -- @Date: 2016-04-17 09:50:39
--- @Last Modified time: 2016-04-18 16:22:12
+-- @Last Modified time: 2016-04-23 00:12:26
 
 module PCNF
     where
@@ -25,9 +25,9 @@ extract (And g (Forall x f))    = (Forall x (extract (And g f)))
 extract (Or g (Forall x f))     = (Forall x (extract (Or g f)))
 extract (And g (Exists x f))    = (Exists x (extract (And g f)))
 extract (Or g (Exists x f))     = (Exists x (extract (Or g f)))
-extract (Forall x f) = (Forall x (extract f))
-extract (Exists x f) = (Exists x (extract f))
-extract f = f
+extract (Forall x f)            = (Forall x (extract f))
+extract (Exists x f)            = (Exists x (extract f))
+extract formula                 = formula
 
 -- Rectify the formula using the equivalences
 -- ∀x F ≡ ∀y F[x/y]
@@ -37,7 +37,7 @@ extract f = f
 rectify::Formula -> Formula
 rectify f = newf
     where
-        bound = boundIndex f
+        bound       = boundIndex f
         (newf, end) = rectify2 f bound
 
 -- Auxiliar method of rectify method.
@@ -49,15 +49,15 @@ rectify2 (Forall x f) start     = ( (Forall y newf), end + 1)
                                 where
                                     midf, newf :: Formula
                                     (midf, end) = rectify2 f start
-                                    y = Var end
-                                    newf = replace x y midf
+                                    y           = Var end
+                                    newf        = replace x y midf
 
 rectify2 (Exists x f) start     = ( (Exists y newf), end + 1)
                                 where
                                     midf, newf :: Formula
                                     (midf, end) = rectify2 f start
-                                    y = Var end
-                                    newf = replace x y midf
+                                    y           = Var end
+                                    newf        = replace x y midf
 
 rectify2 (Not f) start          = (Not newf, end)
                                 where
@@ -67,25 +67,25 @@ rectify2 (Not f) start          = (Not newf, end)
 rectify2 (And f g) start        = ((And newf newg), end)
                                 where
                                     newf, newg :: Formula
-                                    (newg, next) = rectify2 g start
-                                    (newf, end) = rectify2 f next
+                                    (newg, next)    = rectify2 g start
+                                    (newf, end)     = rectify2 f next
 
 rectify2 (Or f g) start        = ((Or newf newg), end)
                                 where
                                     newf, newg :: Formula
-                                    (newg, next) = rectify2 g start
-                                    (newf, end) = rectify2 f next
+                                    (newg, next)    = rectify2 g start
+                                    (newf, end)     = rectify2 f next
 
 rectify2 (Imp f g) start        = ((Imp newf newg), end)
                                 where
                                     newf, newg:: Formula
-                                    (newg, next) = rectify2 g start
-                                    (newf, end) = rectify2 f next
+                                    (newg, next)    = rectify2 g start
+                                    (newf, end)     = rectify2 f next
 
 rectify2 (Biimp f g) start       = ((Biimp newf newg), end)
                                 where
                                     newf, newg :: Formula
-                                    (newg, next) = rectify2 g start
-                                    (newf, end) = rectify2 f next
+                                    (newg, next)    = rectify2 g start
+                                    (newf, end)     = rectify2 f next
 
 rectify2 (Pred idx ts) start    = ((Pred idx ts), start)
