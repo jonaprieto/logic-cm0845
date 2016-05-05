@@ -41,11 +41,11 @@ remImp formula      = formula
 
 
 -- DeMorgan laws and push operators inward using the logical equivalences
---   ¬ (α ∧ β)) ≈ ¬ α ∨ ¬ β,
---   ¬ (α ∨ β)) ≈ ¬ α ∧ ¬ β,
---   ¬ ¬ α      ≈ α,
---   ¬ ∀xPx     ≈ ∃x ¬ Px,
---   ¬ ∃xPx     ≈ ∀x ¬ Px.
+--   ¬ (α ∧ β) ≈ ¬ α ∨ ¬ β,
+--   ¬ (α ∨ β) ≈ ¬ α ∧ ¬ β,
+--   ¬ ¬ α     ≈ α,
+--   ¬ ∀x P(x) ≈ ∃x ¬ P(x),
+--   ¬ ∃x P(x) ≈ ∀x ¬ P(x).
 
 demorgan :: Formula -> Formula
 demorgan (Not (And f1 f2))  = Or (demorgan $ Not f1) (demorgan $ Not f2)
@@ -59,6 +59,9 @@ demorgan (Exists x f)       = Exists x (demorgan f)
 demorgan (Forall x f)       = Forall x (demorgan f)
 demorgan formula            = formula
 
+-- Distributive laws
+-- (a ∧ b) ∨ c = (a ∨ c) ∧ (b ∨ c)
+-- a ∨ (b ∧ c) = (a ∨ b) ∧ (a ∨ c)
 
 dist:: Formula -> Formula
 dist (Not f)            = Not $ dist f
@@ -68,6 +71,8 @@ dist (Exists x f)       = Exists x (dist f)
 dist (Forall x f)       = Forall x (dist f)
 dist formula            = formula
 
+-- An auxiliar method to deal with Or case of
+-- distributive law.
 distOr:: Formula -> Formula -> Formula
 distOr (And f1 f2) f3 = And (distOr f1 f3) (distOr f2 f3)
 distOr f1 (And f2 f3) = And (distOr f1 f2) (distOr f1 f3)
