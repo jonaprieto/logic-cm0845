@@ -1,6 +1,6 @@
 -- @Author: JONATHAN STEVEN PRIETO CUBIDES
 -- @Date: 2016-04-15 18:03:39
--- @Last Modified time: 2016-04-18 16:29:46
+-- @Last Modified time: 2016-05-05 15:06:54
 
 module Utils
     where
@@ -29,7 +29,7 @@ getTerms::Term -> [Term]
 getTerms (Func _ ts)    = ts
 getTerms _              = []
 
--- Returns a the list of variables [(Var x)] of a formulae.
+-- Returns the list of variables [(Var x)] of a Formula.
 
 getVars:: Formula -> [Term]
 getVars (Forall t f)   = t:getVars f
@@ -41,7 +41,7 @@ getVars (Imp f g)      = getVars f ++ getVars g
 getVars (Biimp f g)    = getVars f ++ getVars g
 getVars (Pred i t)     = getVars_ t
 
--- Returns a the list of variables [(Var x)] of a list of terms.
+-- Returns the list of variables [(Var x)] of a list of Terms.
 
 getVars_:: [Term] -> [Term]
 getVars_ [] = []
@@ -61,9 +61,9 @@ maxIndex ((Var idx):xs) = max idx (maxIndex xs)
 boundIndex::Formula -> Int
 boundIndex f = (maxIndex $ getVars f) + 1
 
--- Replaces all ocurrences of a term x in a Formula by y term.
--- ∀xPx ≈ ∀y Py,
--- ∃xPx ≈ ∃y Py.
+-- Replaces all ocurrences of a Term x in a Formula by the Term y.
+--   ∀x Px ≈ ∀y Py,
+--   ∃x Px ≈ ∃y Py.
 
 replace:: Term -> Term -> Formula -> Formula
 replace x y (Not f)            = Not $ replace x y f
@@ -75,7 +75,7 @@ replace x y (Forall z f)       = Forall z (replace x y f)
 replace x y (Exists z f)       = Exists z (replace x y f)
 replace x y (Pred idx ts)      = Pred idx (replace_ x y ts)
 
--- Replaces all ocurrences of a term X in a list of Term by a term Y.
+-- Replaces all ocurrences of a Term X in a list of Term by the Term Y.
 replace_:: Term -> Term -> [Term] -> [Term]
 replace_ x y (t:ts)
         | isVar t && t == x     = y:rest
