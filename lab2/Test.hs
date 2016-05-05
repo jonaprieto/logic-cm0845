@@ -1,6 +1,6 @@
 -- @Author: JONATHAN STEVEN PRIETO CUBIDES
 -- @Date: 2016-04-17 13:53:04
--- @Last Modified time: 2016-05-05 14:39:07
+-- @Last Modified time: 2016-05-05 14:46:33
 
 module Test
     where
@@ -94,31 +94,31 @@ test4   = TestCase (assertEqual "f4" (pcnf f4) rf4)
 
 -- Test #5
 -- Input:  ¬ ((∀x₀ Px₀ → Qx₀) ∧ (∀x₀ Qx₀ → R(x₀)) → (∀x₀ Px₀ → R(x₀)))
--- Output: ∀x₁∃x₃∃x₂  ((¬Px₃∨ Qx₃) ∧ (¬Qx₂ ∧ Rx₂) ) ∧ (Px₁ ∨ ¬Rx₁)
+-- Output: ∀x₁∃x₃∃x₂ ((¬Px₃∨ Qx₃) ∧ (¬Qx₂ ∧ Rx₂) ) ∧ (Px₁ ∨ ¬Rx₁)
 
 f5 = (Not
         (Imp
             (And
-                (Forall x 
+                (Forall x
                     (Imp px qx))
-                (Forall x 
-                    (Imp qx rx))) 
-            (Forall x 
+                (Forall x
+                    (Imp qx rx)))
+            (Forall x
                 (Imp px rx))))
 
 rf5 = (Exists (Var 1)
             (Forall (Var 3)
-                (Forall (Var 2) 
-                    (And 
-                        (And 
-                            (Or 
-                                (Not (Pred 0 [Var 3])) 
-                                (Pred 3 [Var 3])) 
-                            (Or 
-                                (Not (Pred 3 [Var 2])) 
-                                (Pred 6 [Var 2]))) 
-                        (And 
-                            (Pred 0 [Var 1]) 
+                (Forall (Var 2)
+                    (And
+                        (And
+                            (Or
+                                (Not (Pred 0 [Var 3]))
+                                (Pred 3 [Var 3]))
+                            (Or
+                                (Not (Pred 3 [Var 2]))
+                                (Pred 6 [Var 2])))
+                        (And
+                            (Pred 0 [Var 1])
                             (Not (Pred 6 [Var 1])))))))
 
 test5 = TestCase (assertEqual "f5" (pcnf f5) rf5)

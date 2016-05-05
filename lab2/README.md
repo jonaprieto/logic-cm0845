@@ -10,7 +10,7 @@ Usage
 In the ghci console, load the library.
 
 ```Haskell
-Prelude>:load PCNF
+Prelude>:l PCNF
 ```
 then try the following example.
 
@@ -42,7 +42,7 @@ data Formula =
   | Forall Term Formula
   | Exists Term Formula
     deriving (Show, Eq)
-``` 
+```
 
 On this way, we can build up any formula given by the language,
 like these ones:
@@ -70,7 +70,7 @@ let f0 = (Forall x px)
 ```
 
 ```Haskell
-let f1  = (Not (Exists x (Imp px (Forall x px))))
+let f1 = (Not (Exists x (Imp px (Forall x px))))
 ```
 
 Finally, if you need the prenex conjuctive normal form of a formula,
@@ -79,7 +79,7 @@ the library provides you the method `pcnf::Formula -> Formula`.
 For instance, `pcnf` applies to the last example `f1`:
 
 ```Haskell
-Prelude> pcnf  (Not (Exists x (Imp px (Forall x px))))
+Prelude> pcnf (Not (Exists x (Imp px (Forall x px))))
 ```
 gives you:
 
