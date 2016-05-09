@@ -27,4 +27,4 @@ f1, f2 :: Formula
 f1 = Forall x p
 f2 = Forall x (And (Exists y r) s)
 
-f3 = (Forall x (Exists y (Or p (And q (Not r)))))
+f3 = Forall x (Exists y (Or p (And q (Not r))))

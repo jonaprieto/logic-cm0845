@@ -1,3 +1,5 @@
+-- @Date: 2016-04-17 13:53:04
+
 module CNF
     where
 
@@ -47,28 +49,37 @@ remImp formula               = formula
 --   ¬ ∀x P(x) ≈ ∃x ¬ P(x),
 --   ¬ ∃x P(x) ≈ ∀x ¬ P(x).
 
+-- The following method implements the theorem 3.5.1.
+-- A generalization of De Morgan’s laws.
+
 demorgan :: Formula -> Formula
-demorgan (Not (And f g))     = Or (demorgan $ Not f) (demorgan $ Not g)
-demorgan (Not (Or f g))      = And (demorgan $ Not f) (demorgan $ Not g)
-demorgan (Not (Not f))       = demorgan f
-demorgan (Not (Forall x f))  = Exists x (demorgan $ Not f)
-demorgan (Not (Exists x f))  = Forall x (demorgan $ Not f)
-demorgan (Forall x f)        = Forall x (demorgan f)
-demorgan (Exists x f)        = Exists x (demorgan f)
-demorgan (And f g)           = And (demorgan f) (demorgan g)
-demorgan (Or f g)            = Or (demorgan f) (demorgan g)
-demorgan formula             = formula
+demorgan (Not (And f g))          = Or (demorgan $ Not f) (demorgan $ Not g)
+demorgan (Not (Or f g))           = And (demorgan $ Not f) (demorgan $ Not g)
+demorgan (Not (Forall x (Not f))) = Exists x $ demorgan f
+demorgan (Not (Forall x f))       = Exists x $ demorgan (Not f)
+demorgan (Not (Exists x (Not f))) = Forall x $ demorgan f
+demorgan (Not (Exists x f))       = Forall x $ demorgan (Not f)
+demorgan (Not (Not f))            = demorgan f
+demorgan (Forall x f)             = Forall x $ demorgan f
+demorgan (Exists x f)             = Exists x $ demorgan f
+demorgan (And f g)                = And (demorgan f) (demorgan g)
+demorgan (Or f g)                 = Or (demorgan f) (demorgan g)
+demorgan formula                  = formula
 
 -- Distributive laws
 -- (a ∧ b) ∨ c = (a ∨ c) ∧ (b ∨ c)
 -- a ∨ (b ∧ c) = (a ∨ b) ∧ (a ∨ c)
 
 dist :: Formula -> Formula
-dist (Not f)                = Not $ dist f
-dist (Exists x f)           = Exists x $ dist f
 dist (Forall x f)           = Forall x $ dist f
+dist (Exists x f)           = Exists x $ dist f
+dist (Not f)                = Not $ dist f
 dist (And f g)              = And (dist f) (dist g)
-dist (Or f g)               = distOr f g
+dist (Or f g)               = distOr nf ng
+    where
+        nf, ng :: Formula
+        nf = dist f
+        ng = dist g
 dist formula                = formula
 
 -- An auxiliar method to deal with Or case of

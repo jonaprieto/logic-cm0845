@@ -1,16 +1,16 @@
 PCNF.hs
 ---
-Jonathan S. Prieto. C.
+Author: Jonathan S. Prieto. C.
 
-Translates first-order logic (FOL) formulae to the prenex
-conjunctive normal form (PCNF).
+The program `PCNF.hs` translates first-order logic (FOL) formulae to the
+prenex conjunctive normal form (PCNF).
 
 Usage
 ---
 In the ghci console, load the library.
 
 ```Haskell
-Prelude>:l PCNF
+Prelude>:load PCNF.hs
 ```
 then try the following example.
 
@@ -19,12 +19,13 @@ Prelude> let x = Var 1
 Prelude> let y = Var 2
 Prelude> let px = Pred 0 [x]
 Prelude> let qx = Pred 1 [x]
-Prelude> let f1 = (Not (Exists x (Imp px (Forall x px))))
+Prelude> let f1 = Not (Exists x (Imp px (Forall x px)))
 Prelude> pcnf f1
 Forall (Var 2) (Exists (Var 1) (And (Pred 0 [Var 2]) (Not (Pred 0 [Var 1]))))
 ```
 
-The context-free grammar is the following (`FOL.hs`) for the language:
+The context-free grammar for FOL is given on the file `FOL.hs` for the
+language:
 
 ```Haskell
 -- A term in First-Order Logic
@@ -44,8 +45,7 @@ data Formula =
     deriving (Show, Eq)
 ```
 
-On this way, we can build up any formula given by the language,
-like these ones:
+On this way, we can build up any formula given by the language.
 
 Defining some basic terms (variables):
 
@@ -56,7 +56,7 @@ y   = Var 1
 z   = Var 2
 ```
 
-Defining a predicate
+Defining a predicate.
 ```Haskell
 px  = Pred 0 [x]
 py  = Pred 1 [y]
@@ -66,21 +66,22 @@ pxz = Pred 2 [xz]
 Some other examples:
 
 ```Haskell
-let f0 = (Forall x px)
+let f0 = Forall x px
 ```
 
 ```Haskell
-let f1 = (Not (Exists x (Imp px (Forall x px))))
+let f1 = Not (Exists x (Imp px (Forall x px)))
 ```
 
 Finally, if you need the prenex conjuctive normal form of a formula,
-the library provides you the method `pcnf::Formula -> Formula`.
+the library provides the method `pcnf :: Formula -> Formula`.
 
 For instance, `pcnf` applies to the last example `f1`:
 
 ```Haskell
-Prelude> pcnf (Not (Exists x (Imp px (Forall x px))))
+Prelude> pcnf Not (Exists x (Imp px (Forall x px)))
 ```
+
 gives you:
 
 ```Haskell
