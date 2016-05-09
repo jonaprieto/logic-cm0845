@@ -102,6 +102,47 @@ replace_ x y (t:ts)
 replace_ x y [] = []
 
 
+-- This is the core of rename method in PCNF.hs.
+-- It renames each bound variable based on a (index) candidate.
+-- The index appropriate is given by the boundIndex method.
+-- It works following a bottom-top method in the parse tree of the formula.
+
+rectify :: Formula -> Int -> (Formula, Int)
+rectify (Pred i t) start       = (Pred i t, start)
+rectify (Forall x f) start     = (Forall y newf, end + 1)
+    where
+        midf, newf  :: Formula
+        end         :: Int
+        (midf, end) = rectify f start
+        y           = Var end
+        newf        = replace x y midf
+
+rectify (Exists x f) start     = (Exists y newf, end + 1)
+    where
+        midf, newf  :: Formula
+        end         :: Int
+        (midf, end) = rectify f start
+        y           = Var end
+        newf        = replace x y midf
+
+rectify (Not f) start          = (Not newf, end)
+    where
+        newf        :: Formula
+        end         :: Int
+        (newf, end) = rectify f start
+
+rectify (And f g) start        = (And newf newg, end)
+    where
+        newf, newg   :: Formula
+        (newg, next) = rectify g start
+        (newf, end)  = rectify f next
+
+rectify (Or f g) start        = (Or newf newg, end)
+    where
+        newf, newg   :: Formula
+        (newg, next) = rectify g start
+        (newf, end)  = rectify f next
+
 -- The following method implements the definition 3.3.6-7 [van Dalen, 2013].
 -- Free variables of a Formula.
 
@@ -119,10 +160,10 @@ freeVars (Imp  f g)     = freeVars f ++ freeVars g
 -- Based on Definition 3.3.6 and Definition 3.3.7 [van Dalen, 2013].
 
 boundVars :: Formula -> [Term]
-boundVars (Pred _ t)  = []
+boundVars (Pred _ t)    = []
 boundVars (Not f)       = boundVars f
-boundVars (Forall x f)  = boundVars f ++ [x]
-boundVars (Exists x f)  = boundVars f ++ [x]
+boundVars (Forall x f)  = x:boundVars f
+boundVars (Exists x f)  = x:boundVars f
 boundVars (And f g)     = boundVars f ++ boundVars g
 boundVars (Or  f g)     = boundVars f ++ boundVars g
 boundVars (Biimp  f g)  = boundVars f ++ boundVars g
@@ -133,34 +174,47 @@ boundVars (Imp  f g)    = boundVars f ++ boundVars g
 
 simplifyQi :: Formula -> Formula
 simplifyQi (Forall x f)
-    | x `elem` freeVars f                   = Forall x f
-    | otherwise                             = f
+    | x `elem` freeVars f                   = Forall x $ simplifyQi f
+    | otherwise                             = simplifyQi f
 simplifyQi (Exists x f)
-    | x `elem` freeVars f                   = Exists x f
-    | otherwise                             = f
+    | x `elem` freeVars f                   = Exists x $ simplifyQi f
+    | otherwise                             = simplifyQi f
 simplifyQi (And (Forall x f) (Forall y g))
-    | x == y                                = Forall x $ And f g
+    | x == y                                = Forall x $ And nf ng
     | otherwise                             = expr
     where
-        expr :: Formula
-        expr = And (Forall x f) (Forall y g)
+        nf, ng :: Formula
+        nf = simplifyQi f
+        ng = simplifyQi g
+        expr   :: Formula
+        expr = And (Forall x nf) (Forall y ng)
 simplifyQi (Or (Exists x f) (Exists y g))
-    | x == y                                = Exists x $ Or f g
+    | x == y                                = Exists x $ Or nf ng
     | otherwise                             = expr
     where
+        nf, ng :: Formula
+        nf = simplifyQi f
+        ng = simplifyQi g
         expr :: Formula
-        expr = Or (Exists x f) (Exists y g)
+        expr = Or (Exists x nf) (Exists y ng)
 simplifyQi (And (Exists x f) g)
-    | x `elem` freeVars g                   = And (Exists x f) g
-    | otherwise                             = Exists x $ And f g
+    | x `elem` freeVars g                   = And (Exists x nf) ng
+    | otherwise                             = Exists x $ And nf ng
+    where
+        nf, ng :: Formula
+        nf = simplifyQi f
+        ng = simplifyQi g
 simplifyQi (And f (Exists x g))             = simplifyQi $ And (Exists x g) f
 simplifyQi (Or (Forall x f) g)
-    | x `elem` freeVars g                   = Or (Forall x f) g
-    | otherwise                             = Forall x $ Or f g
+    | x `elem` freeVars g                   = Or (Forall x nf) ng
+    | otherwise                             = Forall x $ Or nf ng
+    where
+        nf, ng :: Formula
+        nf = simplifyQi f
+        ng = simplifyQi g
 simplifyQi (Or f (Forall x g))              = simplifyQi $ Or (Forall x g) f
 simplifyQi formula                          = formula
 
 ------------------------------------------------------------------------------
 -- References
-
 -- van Dalen, Dirk (2013). Logic and Structure. 5th ed. Springer.

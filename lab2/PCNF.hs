@@ -13,6 +13,12 @@ import Utils
 pcnf :: Formula -> Formula
 pcnf = extract . dist . rename . demorgan . remImp . remBiimp
 
+-- Function to get the PCNF from a given formula in FOL,
+-- using theorem 3.5.2-3 [van Dalen, 2013] for simplify.
+
+mypcnf :: Formula -> Formula
+mypcnf = extract . dist . rename . simplifyQi . demorgan . remImp . remBiimp
+
 -- The following method generates the prenex form of formula given his CNF.
 -- Extract the quantifiers from the inside to outside of the Formula.
 -- Using the convention qᵢ= {∀x, ∃x} and ⊡ to denote a binary operation,
@@ -23,9 +29,10 @@ pcnf = extract . dist . rename . demorgan . remImp . remBiimp
 -- extract (qᵢf)       = qᵢ(extract f)
 -- extract (f ⊡ g)     = combine (F ⊡ G)
 --
--- where, F = extract f and G = extract g
--- Note: the general version of this method is implemented in Utils.simplifyQi
--- We can extract with freedom the quantifiers in virtue the rename method.
+-- where, F = extract f and G = extract g.
+--
+-- Note: We can extract with freedom the quantifiers in virtue the
+-- rename method.
 
 extract :: Formula -> Formula
 extract (Forall x f)            = Forall x $ extract f
@@ -67,44 +74,3 @@ rename f = newf
         newf :: Formula
         end  :: Int
         (newf, end) = rectify f (boundIndex f)
-
--- This is the core of rename method.
--- It renames each bound variable based on a (index) candidate.
--- The index appropriate is given by the boundIndex method.
--- It works following a bottom-top method in the parse tree of the formula.
-
-rectify :: Formula -> Int -> (Formula, Int)
-rectify (Pred i t) start       = (Pred i t, start)
-rectify (Forall x f) start     = (Forall y newf, end + 1)
-    where
-        midf, newf  :: Formula
-        end         :: Int
-        (midf, end) = rectify f start
-        y           = Var end
-        newf        = replace x y midf
-
-rectify (Exists x f) start     = (Exists y newf, end + 1)
-    where
-        midf, newf  :: Formula
-        end         :: Int
-        (midf, end) = rectify f start
-        y           = Var end
-        newf        = replace x y midf
-
-rectify (Not f) start          = (Not newf, end)
-    where
-        newf        :: Formula
-        end         :: Int
-        (newf, end) = rectify f start
-
-rectify (And f g) start        = (And newf newg, end)
-    where
-        newf, newg   :: Formula
-        (newg, next) = rectify g start
-        (newf, end)  = rectify f next
-
-rectify (Or f g) start        = (Or newf newg, end)
-    where
-        newf, newg   :: Formula
-        (newg, next) = rectify g start
-        (newf, end)  = rectify f next

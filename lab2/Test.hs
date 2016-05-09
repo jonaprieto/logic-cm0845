@@ -91,7 +91,7 @@ rf3_     = Forall (Var 1)
                 (And
                     (Pred 0 [Var 1])
                     (Pred 3 [Var 1]))
-test3_   = TestCase (assertEqual "f3_" ((pcnf . simplifyQi) f3_) rf3_)
+test3_   = TestCase (assertEqual "f3_" (mypcnf f3_) rf3_)
 
 -- Test #4
 -- Input:  (∀x₀ Px₀) ∧ (∃x₁ Qx₁)
@@ -131,5 +131,20 @@ rf5 = Exists (Var 1)
                 (Pred 0 [Var 1])
                 (Not (Pred 6 [Var 1]))))))
 
+rf5_ = Exists (Var 2) 
+        (Forall (Var 1) 
+            (And 
+                (And 
+                    (Pred 0 [Var 2]) 
+                    (Not (Pred 6 [Var 2]))) 
+                (And 
+                    (Or 
+                        (Not (Pred 0 [Var 1])) 
+                        (Pred 3 [Var 1])) 
+                    (Or (Not (Pred 3 [Var 1])) 
+                        (Pred 6 [Var 1])))))
+
 test5 = TestCase (assertEqual "f5" (pcnf f5) rf5)
+test5_ = TestCase (assertEqual "f5" (mypcnf f5) rf5_)
+
 tests = TestList [test0, test1, test2, test3, test4, test5, test3_]
