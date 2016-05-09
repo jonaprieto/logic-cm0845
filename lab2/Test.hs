@@ -147,4 +147,5 @@ rf5_ = Exists (Var 2)
 test5 = TestCase (assertEqual "f5" (pcnf f5) rf5)
 test5_ = TestCase (assertEqual "f5" (mypcnf f5) rf5_)
 
-tests = TestList [test0, test1, test2, test3, test4, test5, test3_]
+tests = TestList [test0, test1, test2, test3, test4, test5]
+beta  = TestList [test3_, test5_]
