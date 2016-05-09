@@ -57,6 +57,8 @@ combineExtract formula                  = formula
 --   ∃x F ≈ ∃y F[x:=y]
 -- where y is a free-variable in F. The value of y variables is assigned
 -- based on the last unused index for variables (boundIndex).
+-- The outcome has all bound variables distinct, an advantage to apply
+-- the theorems 3.5.2-3 [van Dalen, 2013].
 
 rename :: Formula -> Formula
 rename f = newf
