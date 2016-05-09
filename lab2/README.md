@@ -12,7 +12,8 @@ In the ghci console, load the library.
 ```Haskell
 Prelude>:load PCNF.hs
 ```
-then try the following example.
+then try the following examples, the main method is `pcnf`, this method gives
+the prenex conjunctive normal form.
 
 ```Haskell
 Prelude> let x = Var 1
@@ -24,8 +25,7 @@ Prelude> pcnf f1
 Forall (Var 2) (Exists (Var 1) (And (Pred 0 [Var 2]) (Not (Pred 0 [Var 1]))))
 ```
 
-The context-free grammar for FOL is given on the file `FOL.hs` for the
-language:
+You can write whatever formula in FOL follows the grammar given on the file `FOL.hs`:
 
 ```Haskell
 -- A term in First-Order Logic
@@ -45,10 +45,15 @@ data Formula =
     deriving (Show, Eq)
 ```
 
-On this way, we can build up any formula given by the language.
+On this way, we can build up any formula. Then, in a file after import
+the module pcnf you can do some computations.
 
-Defining some basic terms (variables):
+Import the library.
+```Haskell
+import PCNF
+```
 
+Defining a term (variable):
 ```Haskell
 x,y,z :: Term
 x   = Var 0
@@ -63,18 +68,24 @@ py  = Pred 1 [y]
 pxz = Pred 2 [xz]
 ```
 
-Some other examples:
-
+Definining a formula.
 ```Haskell
-let f0 = Forall x px
-```
-
-```Haskell
-let f1 = Not (Exists x (Imp px (Forall x px)))
+f5 = Not
+    (Imp
+        (And
+            (Forall x (Imp px qx))
+            (Forall x (Imp qx rx)))
+       (Forall x (Imp px rx)))
 ```
 
 Finally, if you need the prenex conjuctive normal form of a formula,
 the library provides the method `pcnf :: Formula -> Formula`.
+
+Last example:
+
+```Haskell
+let f1 = Not (Exists x (Imp px (Forall x px)))
+```
 
 For instance, `pcnf` applies to the last example `f1`:
 
@@ -82,7 +93,7 @@ For instance, `pcnf` applies to the last example `f1`:
 Prelude> pcnf Not (Exists x (Imp px (Forall x px)))
 ```
 
-gives you:
+gives you (pretty format):
 
 ```Haskell
 Forall (Var 2)
@@ -92,7 +103,7 @@ Forall (Var 2)
                 (Not (Pred 0 [Var 1]))))
 ```
 
-You can find more usage cases in (`Test.hs`)
+You can find more usage cases in (`Test.hs`).
 
 Testing
 ---
@@ -105,7 +116,7 @@ Cases: 6  Tried: 6  Errors: 0  Failures: 0
 Counts {cases = 6, tried = 6, errors = 0, failures = 0}
 ```
 
-If you don't have `hunit` library, you can install it as follows in the shell:
+If you don't have `hunit` library, you can go for it and install it as follows. In your console, invoke cabal.
 
 ```Haskell
 cabal install hunit

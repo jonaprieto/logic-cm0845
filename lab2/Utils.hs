@@ -61,7 +61,7 @@ maxIndex (Var idx:xs) = max idx (maxIndex xs)
 
 
 -- The following method provies a Index unused for the
--- variables in the formula. 
+-- variables in the formula.
 -- x = Var Index.
 -- It helps to use new variables.
 

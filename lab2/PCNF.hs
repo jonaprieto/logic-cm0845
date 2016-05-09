@@ -13,6 +13,7 @@ import Utils
 pcnf :: Formula -> Formula
 pcnf = extract . dist . rename . demorgan . remImp . remBiimp
 
+-- The following method generates the prenex form of formula given his CNF.
 -- Extract the quantifiers from the inside to outside of the Formula.
 -- Using the convention qᵢ= {∀x, ∃x} and ⊡ to denote a binary operation,
 -- the defintion for the method extracts is as follows:
