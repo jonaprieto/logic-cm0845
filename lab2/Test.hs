@@ -1,6 +1,6 @@
 -- @Author: JONATHAN STEVEN PRIETO CUBIDES
 -- @Date: 2016-04-17 13:53:04
--- @Last Modified time: 2016-05-05 14:46:33
+-- @Last Modified time: 2016-05-06 17:50:01
 
 module Test
     where
@@ -72,6 +72,7 @@ test2   = TestCase (assertEqual "f2" (pcnf f2) rf2)
 -- Test #3
 -- Input:  (∀x₀ Px₀) ∨ (∃x₁ Qx₁)
 -- Output: ∀x₃ ∃x₂ (Px₃ ∨ Qx₂)
+
 f3      = (Or (Forall x px) (Exists y qy))
 rf3     = Forall (Var 3)
                 (Exists (Var 2)

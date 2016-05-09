@@ -1,6 +1,6 @@
 -- @Author: JONATHAN STEVEN PRIETO CUBIDES
 -- @Date: 2016-04-17 09:50:39
--- @Last Modified time: 2016-05-05 15:04:02
+-- @Last Modified time: 2016-05-09 02:53:07
 
 module PCNF
     where
@@ -12,8 +12,9 @@ import Utils
 -- Function to get the PCNF from a given formula in FOL.
 
 pcnf :: Formula -> Formula
-pcnf = dist . extract . demorgan . remImp . remBiimp . rectify
+pcnf = dist . extract . morgan . rename . remImp . remBiimp
 
+-- FIXME Pag 70. Van Dalen. 
 -- Extract the quantifiers from the inside to outside of the Formula.
 -- Using the convention qᵢ= {∀x, ∃x} and ⊡ to denote a binary operation,
 -- the defintion for the method extracts is as follows:
@@ -22,13 +23,10 @@ pcnf = dist . extract . demorgan . remImp . remBiimp . rectify
 -- extract (  f ⊡ qᵢg) = qᵢ(extract (f ⊡ g))
 -- extract (qᵢf)       = qᵢ(extract f)
 -- extract (f ⊡ g)     = extract_ (F ⊡ G)
---                     where
---                       F = extract f
---                       G = extract g
+-- where, F = extract f and G = extract g
 --
 -- Obs: the method extract_ avoid the infinity loop, but
 -- the intention of it is the same as extract method.
-
 
 extract :: Formula -> Formula
 extract (Forall x f)            = (Forall x (extract f))
@@ -56,63 +54,54 @@ extract_ (And g (Forall x f))    = (Forall x (extract_ (And g f)))
 extract_ (And g (Exists x f))    = (Exists x (extract_ (And g f)))
 extract_ formula                 = formula
 
--- Rectify the formula using the equivalences
+-- This method renames the variables of a formula using the theorem:
 --   ∀x F ≈ ∀y F[x:=y]
 --   ∃x F ≈ ∃y F[x:=y]
--- where y is a free-variable in F.
+-- where y is a free-variable in F. The value of y variables is assigned
+-- based on the last unused index for variables (boundIndex).
 
-rectify::Formula -> Formula
-rectify f = newf
+rename :: Formula -> Formula
+rename f = newf
     where
-        bound       = boundIndex f
-        (newf, end) = rectify_ f bound
+        newf :: Formula
+        end  :: Int
+        (newf, end) = rectify_ f (boundIndex f)
 
--- Auxiliar method of the `rectify` method.
+-- This is the core of renames task.
 -- It renames each variable (index) based on a number (index) candidate.
 -- The index appropriate is given by the boundIndex method.
 
-rectify_::Formula -> Int -> (Formula, Int)
-rectify_ (Forall x f) start     = ( (Forall y newf), end + 1)
-                                where
-                                    midf, newf :: Formula
-                                    (midf, end) = rectify_ f start
-                                    y           = Var end
-                                    newf        = replace x y midf
+rectify_ :: Formula -> Int -> (Formula, Int)
+rectify_ (Pred idx ts) start    = ((Pred idx ts), start)
+rectify_ (Forall x f) start     = ((Forall y newf), end + 1)
+    where
+        midf, newf :: Formula
+        end        :: Int
+        (midf, end) = rectify_ f start
+        y           = Var end
+        newf        = replace x y midf
 
-rectify_ (Exists x f) start     = ( (Exists y newf), end + 1)
-                                where
-                                    midf, newf :: Formula
-                                    (midf, end) = rectify_ f start
-                                    y           = Var end
-                                    newf        = replace x y midf
+rectify_ (Exists x f) start     = ((Exists y newf), end + 1)
+    where
+        midf, newf :: Formula
+        end        :: Int
+        (midf, end) = rectify_ f start
+        y           = Var end
+        newf        = replace x y midf
 
 rectify_ (Not f) start          = (Not newf, end)
-                                where
-                                    newf :: Formula
-                                    (newf, end) = rectify_ f start
+    where
+        newf :: Formula
+        (newf, end) = rectify_ f start
 
 rectify_ (And f g) start        = ((And newf newg), end)
-                                where
-                                    newf, newg :: Formula
-                                    (newg, next)    = rectify_ g start
-                                    (newf, end)     = rectify_ f next
+    where
+        newf, newg :: Formula
+        (newg, next)    = rectify_ g start
+        (newf, end)     = rectify_ f next
 
 rectify_ (Or f g) start        = ((Or newf newg), end)
-                                where
-                                    newf, newg :: Formula
-                                    (newg, next)    = rectify_ g start
-                                    (newf, end)     = rectify_ f next
-
-rectify_ (Imp f g) start        = ((Imp newf newg), end)
-                                where
-                                    newf, newg:: Formula
-                                    (newg, next)    = rectify_ g start
-                                    (newf, end)     = rectify_ f next
-
-rectify_ (Biimp f g) start       = ((Biimp newf newg), end)
-                                where
-                                    newf, newg :: Formula
-                                    (newg, next)    = rectify_ g start
-                                    (newf, end)     = rectify_ f next
-
-rectify_ (Pred idx ts) start    = ((Pred idx ts), start)
+    where
+        newf, newg :: Formula
+        (newg, next)    = rectify_ g start
+        (newf, end)     = rectify_ f next
