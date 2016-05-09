@@ -86,13 +86,12 @@ test3   = TestCase (assertEqual "f3" (pcnf f3) rf3)
 -- This should be the minimal, another answer.
 -- Using (pcnf . simplifyQi)
 
-f3_      = And (Forall x px) (Forall x px)
-rf3_     = Forall (Var 3)
-                (Exists (Var 2)
-                    (And
-                        (Pred 0 [Var 3])
-                        (Pred 0 [Var 2])))
-test3_   = TestCase (assertEqual "f3_" (pcnf f3_) rf3_)
+f3_      = And (Forall x px) (Forall x qx)
+rf3_     = Forall (Var 1)
+                (And
+                    (Pred 0 [Var 1])
+                    (Pred 3 [Var 1]))
+test3_   = TestCase (assertEqual "f3_" ((pcnf . simplifyQi) f3_) rf3_)
 
 -- Test #4
 -- Input:  (∀x₀ Px₀) ∧ (∃x₁ Qx₁)
@@ -111,9 +110,9 @@ test4   = TestCase (assertEqual "f4" (pcnf f4) rf4)
 -- Output: ∀x₁∃x₃∃x₂ ((¬Px₃∨ Qx₃) ∧ (¬Qx₂ ∧ Rx₂) ) ∧ (Px₁ ∨ ¬Rx₁)
 
 f5 = Not
-    (Imp 
-        (And 
-            (Forall x (Imp px qx)) 
+    (Imp
+        (And
+            (Forall x (Imp px qx))
             (Forall x (Imp qx rx)))
        (Forall x (Imp px rx)))
 
@@ -121,16 +120,16 @@ rf5 = Exists (Var 1)
     (Forall (Var 3)
        (Forall (Var 2)
           (And
-             (And 
-                (Or 
-                    (Not (Pred 0 [Var 3])) 
+             (And
+                (Or
+                    (Not (Pred 0 [Var 3]))
                     (Pred 3 [Var 3]))
-                (Or 
-                    (Not (Pred 3 [Var 2])) 
+                (Or
+                    (Not (Pred 3 [Var 2]))
                     (Pred 6 [Var 2])))
-             (And 
-                (Pred 0 [Var 1]) 
+             (And
+                (Pred 0 [Var 1])
                 (Not (Pred 6 [Var 1]))))))
 
 test5 = TestCase (assertEqual "f5" (pcnf f5) rf5)
-tests = TestList [test0, test1, test2, test3, test4, test5]
+tests = TestList [test0, test1, test2, test3, test4, test5, test3_]

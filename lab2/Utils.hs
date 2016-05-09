@@ -28,9 +28,9 @@ getTerms :: Term -> [Term]
 getTerms (Func _ ts) = ts
 getTerms _           = []
 
--- Returns the list of variables [(Var x)] of a Formula.
--- Note that I assure that x is var always I had (Forall/Exists x ..)
--- and that should happend in all usages of Forall and Exists.
+-- Returns the list of variables of a Formula.
+-- Note that I assure that x is Var whenever I had (Forall/Exists x ..)
+-- and that should happend in all usages for Forall and Exists.
 
 getVars :: Formula -> [Term]
 getVars (Forall t f) = t:getVars f
@@ -50,13 +50,20 @@ getVars_ (x:xs) | isVar x  = x:getVars_ xs
                 | isCons x = getVars_ xs
                 | isFunc x = getVars_ (getTerms x) ++ getVars_ xs
 
--- Find the maximum value of the list of integers from
+-- All variables are unique, there are identified by their index.
+-- x = Var Index.
+-- The following method, find the maximum value for Index in
+-- all variables of a formula.
 
 maxIndex ::[Term] -> Int
 maxIndex [] = 0
 maxIndex (Var idx:xs) = max idx (maxIndex xs)
 
--- Find the maximun integer for the getVars of a given formula.
+
+-- The following method provies a Index unused for the
+-- variables in the formula. 
+-- x = Var Index.
+-- It helps to use new variables.
 
 boundIndex :: Formula -> Int
 boundIndex f = maxIndex (getVars f) + 1

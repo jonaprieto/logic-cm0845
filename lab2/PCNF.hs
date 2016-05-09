@@ -10,10 +10,8 @@ import Utils
 
 -- Function to get the PCNF from a given formula in FOL.
 
-ff = rename . remImp . remBiimp
-
 pcnf :: Formula -> Formula
-pcnf = dist . extract . rename . demorgan . remImp . remBiimp
+pcnf = extract . dist . rename . demorgan . remImp . remBiimp
 
 -- Extract the quantifiers from the inside to outside of the Formula.
 -- Using the convention qᵢ= {∀x, ∃x} and ⊡ to denote a binary operation,
@@ -67,9 +65,10 @@ rename f = newf
         end  :: Int
         (newf, end) = rectify f (boundIndex f)
 
--- This is the core of renames task.
--- It renames each variable (index) based on a number (index) candidate.
+-- This is the core of rename method.
+-- It renames each bound variable based on a (index) candidate.
 -- The index appropriate is given by the boundIndex method.
+-- It works following a bottom-top method in the parse tree of the formula.
 
 rectify :: Formula -> Int -> (Formula, Int)
 rectify (Pred i t) start       = (Pred i t, start)
