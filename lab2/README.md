@@ -3,7 +3,27 @@ PCNF.hs
 Author: Jonathan S. Prieto. C.
 
 The program `PCNF.hs` translates first-order logic (FOL) formulae to the
-prenex conjunctive normal form (PCNF).
+prenex conjunctive normal form (PCNF) with the `pcnf` method.
+
+This library has the following files:
+
+- The file `PCNF.hs` includes tree methods.
+  - The `pcnf` methods is the main one. It gives theprenex conjunctive normal
+  form of a formula.
+  - The `extract` method puts the quantifiers as prefix in the formula.
+  - The `combineExtract` is that, combine in the D&Q `extract` method.
+- The file `CNF.hs` has the method `dist`, it is delegated to apply the
+distributive laws in a formula. Also, in this file, we have `demorgan` for
+the DeMorgan Laws, a generalization of this rules.
+- The file `Utils.hs` has many methods for that the `PCNF.rename` method
+works.
+  - The `rectify` method changes all bound variables.
+  - The `replace` method implements a substitution F[y/x].
+  - The `boundIndex` method finds a suitable index for a new variable
+  unused in the formula.
+  - Other methods that helps to the above ones works.
+- The file `FOL.hs` defines the first-order logic language.
+- The file `Test.hs` includes at least five different test cases as examples.
 
 Usage
 ---
