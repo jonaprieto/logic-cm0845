@@ -83,23 +83,23 @@ replace x y (Exists z f)
 replace x y (Not f)             = Not $ replace x y f
 replace x y (And f g)           = And (replace x y f) (replace x y g)
 replace x y (Or f g)            = Or (replace x y f) (replace x y g)
-replace x y (Pred idx ts)       = Pred idx $ replace_ x y ts
+replace x y (Pred idx ts)       = Pred idx $ replace2 x y ts
 replace x y (Biimp f g)         = Biimp (replace x y f) (replace x y g)
 replace x y (Imp f g)           = Imp (replace x y f) (replace x y g)
 
 -- The following method implements the definition 3.3.9 [van Dalen, 2013].
 -- Replaces all ocurrences of a Term X in a list of Term by the Term Y.
 
-replace_ :: Term -> Term -> [Term] -> [Term]
-replace_ x y (t:ts)
-    | isVar t && t == x     = y:replace_ x y ts
-    | isFunc t              = f:replace_ x y ts
-    | otherwise             = t:replace_ x y ts
+replace2 :: Term -> Term -> [Term] -> [Term]
+replace2 x y (t:ts)
+    | isVar t && t == x     = y:replace2 x y ts
+    | isFunc t              = f:replace2 x y ts
+    | otherwise             = t:replace2 x y ts
     where
         newterms :: [Term]
-        newterms = replace_ x y $ getTerms t
+        newterms = replace2 x y $ getTerms t
         f        = Func (getInt t) newterms
-replace_ x y [] = []
+replace2 x y [] = []
 
 
 -- This is the core of rename method in PCNF.hs.

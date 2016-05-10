@@ -75,7 +75,7 @@ dist (Forall x f)           = Forall x $ dist f
 dist (Exists x f)           = Exists x $ dist f
 dist (Not f)                = Not $ dist f
 dist (And f g)              = And (dist f) (dist g)
-dist (Or f g)               = distOr nf ng
+dist (Or f g)               = distOr f g
     where
         nf, ng :: Formula
         nf = dist f
