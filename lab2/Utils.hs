@@ -156,19 +156,6 @@ freeVars (Or  f g)      = freeVars f ++ freeVars g
 freeVars (Biimp  f g)   = freeVars f ++ freeVars g
 freeVars (Imp  f g)     = freeVars f ++ freeVars g
 
--- Bound variables of a Formula.
--- Based on Definition 3.3.6 and Definition 3.3.7 [van Dalen, 2013].
-
-boundVars :: Formula -> [Term]
-boundVars (Pred _ t)    = []
-boundVars (Not f)       = boundVars f
-boundVars (Forall x f)  = x:boundVars f
-boundVars (Exists x f)  = x:boundVars f
-boundVars (And f g)     = boundVars f ++ boundVars g
-boundVars (Or  f g)     = boundVars f ++ boundVars g
-boundVars (Biimp  f g)  = boundVars f ++ boundVars g
-boundVars (Imp  f g)    = boundVars f ++ boundVars g
-
 -- The following method implements the theorem 3.5.2-3 [van Dalen, 2013].
 -- Quantification over a variable that does not occur can be deleted.
 
