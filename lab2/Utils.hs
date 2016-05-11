@@ -33,23 +33,24 @@ getTerms _           = []
 -- and that should happend in all usages for Forall and Exists.
 
 getVars :: Formula -> [Term]
-getVars (Forall t f) = t:getVars f
-getVars (Exists t f) = t:getVars f
+getVars (Forall t f) = t : getVars f
+getVars (Exists t f) = t : getVars f
 getVars (Not f)      = getVars f
 getVars (And f g)    = getVars f ++ getVars g
 getVars (Or f g)     = getVars f ++ getVars g
 getVars (Imp f g)    = getVars f ++ getVars g
 getVars (Biimp f g)  = getVars f ++ getVars g
-getVars (Pred i t)   = getVars_ t
+getVars (Pred i t)   = getVarsTerm t
 
 -- Returns the list of variables [Var x] of a list of Terms.
 
-getVars_ :: [Term] -> [Term]
-getVars_ [] = []
-getVars_ (x:xs) | isVar x  = x:getVars_ xs
-                | isCons x = getVars_ xs
-                | isFunc x = getVars_ (getTerms x) ++ getVars_ xs
-
+getVarsTerm :: [Term] -> [Term]
+getVarsTerm []      = []
+getVarsTerm (x : xs)
+    | isVar x       = x : getVarsTerm xs
+    | isCons x      = getVarsTerm xs
+    | isFunc x      = getVarsTerm (getTerms x) ++ getVarsTerm xs
+        
 -- All variables are unique, there are identified by their index.
 -- x = Var Index.
 -- The following method, find the maximum value for Index in
@@ -57,7 +58,7 @@ getVars_ (x:xs) | isVar x  = x:getVars_ xs
 
 maxIndex ::[Term] -> Int
 maxIndex [] = 0
-maxIndex (Var idx:xs) = max idx (maxIndex xs)
+maxIndex (Var idx : xs) = max idx (maxIndex xs)
 
 
 -- The following method provies a Index unused for the
@@ -74,32 +75,32 @@ boundIndex f = maxIndex (getVars f) + 1
 --   ∃x Px ≈ ∃y Py.
 
 replace :: Term -> Term -> Formula -> Formula
+replace x y (Not f)             = Not $ replace x y f
+replace x y (And f g)           = And (replace x y f) (replace x y g)
+replace x y (Or f g)            = Or (replace x y f) (replace x y g)
+replace x y (Pred idx ts)       = Pred idx $ replaceTerm x y ts
+replace x y (Biimp f g)         = Biimp (replace x y f) (replace x y g)
+replace x y (Imp f g)           = Imp (replace x y f) (replace x y g)
 replace x y (Forall z f)
     | x == y                    = Forall z f
     | otherwise                 = Forall z $ replace x y f
 replace x y (Exists z f)
     | x == y                    = Exists z f
     | otherwise                 = Exists z $ replace x y f
-replace x y (Not f)             = Not $ replace x y f
-replace x y (And f g)           = And (replace x y f) (replace x y g)
-replace x y (Or f g)            = Or (replace x y f) (replace x y g)
-replace x y (Pred idx ts)       = Pred idx $ replace2 x y ts
-replace x y (Biimp f g)         = Biimp (replace x y f) (replace x y g)
-replace x y (Imp f g)           = Imp (replace x y f) (replace x y g)
 
 -- The following method implements the definition 3.3.9 [van Dalen, 2013].
 -- Replaces all ocurrences of a Term X in a list of Term by the Term Y.
 
-replace2 :: Term -> Term -> [Term] -> [Term]
-replace2 x y (t:ts)
-    | isVar t && t == x     = y:replace2 x y ts
-    | isFunc t              = f:replace2 x y ts
-    | otherwise             = t:replace2 x y ts
+replaceTerm :: Term -> Term -> [Term] -> [Term]
+replaceTerm x y [] = []
+replaceTerm x y (t : ts)
+    | isVar t && t == x     = y : replaceTerm x y ts
+    | isFunc t              = f : replaceTerm x y ts
+    | otherwise             = t : replaceTerm x y ts
     where
         newterms :: [Term]
-        newterms = replace2 x y $ getTerms t
+        newterms = replaceTerm x y $ getTerms t
         f        = Func (getInt t) newterms
-replace2 x y [] = []
 
 
 -- This is the core of rename method in PCNF.hs.
@@ -148,7 +149,7 @@ rectify formula start = (formula, start)
 -- Free variables of a Formula.
 
 freeVars :: Formula -> [Term]
-freeVars (Pred _ t)     = getVars_ t
+freeVars (Pred _ t)     = getVarsTerm t
 freeVars (Not f)        = freeVars f
 freeVars (Forall x f)   = freeVars f \\ [x]
 freeVars (Exists x f)   = freeVars f \\ [x]

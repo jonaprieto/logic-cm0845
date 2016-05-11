@@ -5,7 +5,7 @@ module PCNF
     where
 
 import FOL
-import CNF
+import CNF (dist, demorgan, remImp, remBiimp)
 import Utils (rectify, simplifyQi, boundIndex)
 
 -- Function to get the PCNF from a given formula in FOL.
@@ -17,7 +17,7 @@ pcnf = dist . extract . rename . demorgan . remImp . remBiimp
 -- using theorem 3.5.2-3 [van Dalen, 2013] for simplify.
 
 mypcnf :: Formula -> Formula
-mypcnf = dist . extract . rename . simplifyQi . demorgan . remImp . remBiimp
+mypcnf = dist . simplifyQi . extract . rename . simplifyQi . demorgan . remImp . remBiimp
 
 -- The following method generates the prenex form of formula given his CNF.
 -- Extract the quantifiers from the inside to outside of the Formula.
