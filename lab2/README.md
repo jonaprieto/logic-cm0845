@@ -135,6 +135,16 @@ Prelude> :load test
 Cases: 6  Tried: 6  Errors: 0  Failures: 0
 Counts {cases = 6, tried = 6, errors = 0, failures = 0}
 ```
+Use the base cases:
+
+```
+runTestTT tests
+```
+or
+
+```
+runTestTT beta
+```
 
 If you don't have `hunit` library, you can go for it and install it as follows. In your console, invoke cabal.
 

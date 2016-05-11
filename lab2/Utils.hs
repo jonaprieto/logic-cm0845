@@ -119,11 +119,11 @@ rectify (Forall x f) start     = (Forall y newf, end + 1)
 
 rectify (Exists x f) start     = (Exists y newf, end + 1)
     where
-        midf, newf  :: Formula
+        midf1, newf  :: Formula
         end         :: Int
-        (midf, end) = rectify f start
+        (midf1, end) = rectify f start
         y           = Var end
-        newf        = replace x y midf
+        newf        = replace x y midf1
 
 rectify (Not f) start          = (Not newf, end)
     where
@@ -131,17 +131,18 @@ rectify (Not f) start          = (Not newf, end)
         end         :: Int
         (newf, end) = rectify f start
 
-rectify (And f g) start        = (And newf newg, end)
+rectify (And f g) start        = (And newf1 newg, end)
     where
-        newf, newg   :: Formula
+        newf1, newg   :: Formula
         (newg, next) = rectify g start
-        (newf, end)  = rectify f next
+        (newf1, end)  = rectify f next
 
-rectify (Or f g) start        = (Or newf newg, end)
+rectify (Or f g) start        = (Or newf newg1, end)
     where
-        newf, newg   :: Formula
-        (newg, next) = rectify g start
+        newf, newg1   :: Formula
+        (newg1, next) = rectify g start
         (newf, end)  = rectify f next
+rectify formula start = (formula, start)
 
 -- The following method implements the definition 3.3.6-7 [van Dalen, 2013].
 -- Free variables of a Formula.
@@ -167,38 +168,38 @@ simplifyQi (Exists x f)
     | x `elem` freeVars f                   = Exists x $ simplifyQi f
     | otherwise                             = simplifyQi f
 simplifyQi (And (Forall x f) (Forall y g))
-    | x == y                                = Forall x $ And nf ng
+    | x == y                                = Forall x $ And f1 g1
     | otherwise                             = expr
     where
-        nf, ng :: Formula
-        nf = simplifyQi f
-        ng = simplifyQi g
+        f1, g1 :: Formula
+        f1 = simplifyQi f
+        g1 = simplifyQi g
         expr   :: Formula
-        expr = And (Forall x nf) (Forall y ng)
+        expr = And (Forall x f1) (Forall y g1)
 simplifyQi (Or (Exists x f) (Exists y g))
-    | x == y                                = Exists x $ Or nf ng
+    | x == y                                = Exists x $ Or f2 g2
     | otherwise                             = expr
     where
-        nf, ng :: Formula
-        nf = simplifyQi f
-        ng = simplifyQi g
+        f2, g2 :: Formula
+        f2 = simplifyQi f
+        g2 = simplifyQi g
         expr :: Formula
-        expr = Or (Exists x nf) (Exists y ng)
+        expr = Or (Exists x f2) (Exists y g2)
 simplifyQi (And (Exists x f) g)
-    | x `elem` freeVars g                   = And (Exists x nf) ng
-    | otherwise                             = Exists x $ And nf ng
+    | x `elem` freeVars g                   = And (Exists x f3) g3
+    | otherwise                             = Exists x $ And f3 g3
     where
-        nf, ng :: Formula
-        nf = simplifyQi f
-        ng = simplifyQi g
+        f3, g3 :: Formula
+        f3 = simplifyQi f
+        g3 = simplifyQi g
 simplifyQi (And f (Exists x g))             = simplifyQi $ And (Exists x g) f
 simplifyQi (Or (Forall x f) g)
-    | x `elem` freeVars g                   = Or (Forall x nf) ng
-    | otherwise                             = Forall x $ Or nf ng
+    | x `elem` freeVars g                   = Or (Forall x f4) g4
+    | otherwise                             = Forall x $ Or f4 g4
     where
-        nf, ng :: Formula
-        nf = simplifyQi f
-        ng = simplifyQi g
+        f4, g4 :: Formula
+        f4 = simplifyQi f
+        g4 = simplifyQi g
 simplifyQi (Or f (Forall x g))              = simplifyQi $ Or (Forall x g) f
 simplifyQi formula                          = formula
 

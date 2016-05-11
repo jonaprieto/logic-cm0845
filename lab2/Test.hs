@@ -80,18 +80,18 @@ rf3     = Forall (Var 3)
                         (Pred 4 [Var 2])))
 test3   = TestCase (assertEqual "f3" (pcnf f3) rf3)
 
--- Test #3_
+-- Test #3b
 -- Input:  (∀x₀ Px₀) ^ (∀x₀ Qx₀)
 -- Here, ∀x₁ Px₁ ^ Qx₁
 -- This should be the minimal, another answer.
 -- Using (pcnf . simplifyQi)
 
-f3_      = And (Forall x px) (Forall x qx)
-rf3_     = Forall (Var 1)
+f3b      = And (Forall x px) (Forall x qx)
+rf3b     = Forall (Var 1)
                 (And
                     (Pred 0 [Var 1])
                     (Pred 3 [Var 1]))
-test3_   = TestCase (assertEqual "f3_" (mypcnf f3_) rf3_)
+test3b   = TestCase (assertEqual "f3b" (mypcnf f3b) rf3b)
 
 -- Test #4
 -- Input:  (∀x₀ Px₀) ∧ (∃x₁ Qx₁)
@@ -131,7 +131,7 @@ rf5 = Exists (Var 1)
                 (Pred 0 [Var 1])
                 (Not (Pred 6 [Var 1]))))))
 
-rf5_ = Exists (Var 2)
+rf5b = Exists (Var 2)
         (Forall (Var 1)
             (And
                 (And
@@ -145,7 +145,26 @@ rf5_ = Exists (Var 2)
                         (Pred 6 [Var 1])))))
 
 test5  = TestCase (assertEqual "f5" (pcnf f5) rf5)
-test5_ = TestCase (assertEqual "f5" (mypcnf f5) rf5_)
+test5b = TestCase (assertEqual "f5" (mypcnf f5) rf5b)
 
-tests  = TestList [test0, test1, test2, test3, test4, test5]
-beta   = TestList [test3_, test5_]
+testdiego = Imp (Forall x (Imp px qx)) (Imp (Forall x px) (Forall x qx))
+rtestdiego = Exists (Var 3)
+                (Exists (Var 2)
+                    (Forall (Var 1)
+                        (And
+                            (Or
+                                (Pred 0 [Var 3])
+                                (Or
+                                    (Not (Pred 0 [Var 2]))
+                                    (Pred 3 [Var 1])))
+                            (Or
+                                (Not (Pred 3 [Var 3]))
+                                (Or
+                                    (Not (Pred 0 [Var 2]))
+                                    (Pred 3 [Var 1]))))))
+
+testdiegom = TestCase (assertEqual "diego" (pcnf testdiego) rtestdiego)
+
+
+tests  = TestList [test0, test1, test2, test3, test4, test5, testdiegom]
+beta   = TestList [test3b, test5b]
