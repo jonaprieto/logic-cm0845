@@ -11,7 +11,7 @@ import Utils (rectify, simplifyQi, boundIndex)
 -- Function to get the PCNF from a given formula in FOL.
 
 pcnf :: Formula -> Formula
-pcnf = dist . extract . rename . demorgan . remImp . remBiimp
+pcnf =  extract . dist . rename . demorgan . remImp . remBiimp
 
 -- Function to get the PCNF from a given formula in FOL,
 -- using theorem 3.5.2-3 [van Dalen, 2013] for simplify.
