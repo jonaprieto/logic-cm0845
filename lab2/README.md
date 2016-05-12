@@ -45,7 +45,8 @@ Prelude> pcnf f1
 Forall (Var 2) (Exists (Var 1) (And (Pred 0 [Var 2]) (Not (Pred 0 [Var 1]))))
 ```
 
-You can write whatever formula in FOL follows the grammar given on the file `FOL.hs`:
+You can write whatever formula in FOL follows the grammar given on the 
+file `FOL.hs`:
 
 ```Haskell
 -- A term in First-Order Logic
@@ -146,7 +147,8 @@ or
 runTestTT beta
 ```
 
-If you don't have `hunit` library, you can go for it and install it as follows. In your console, invoke cabal.
+If you don't have `hunit` library, you can go for it and install it as 
+follows. In your console, invoke cabal.
 
 ```Haskell
 cabal install hunit

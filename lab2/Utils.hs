@@ -40,16 +40,16 @@ getVars (And f g)    = getVars f ++ getVars g
 getVars (Or f g)     = getVars f ++ getVars g
 getVars (Imp f g)    = getVars f ++ getVars g
 getVars (Biimp f g)  = getVars f ++ getVars g
-getVars (Pred i t)   = getVarsTerm t
+getVars (Pred _ t)   = getVarsTerm t
 
 -- Returns the list of variables [Var x] of a list of Terms.
 
 getVarsTerm :: [Term] -> [Term]
-getVarsTerm []      = []
 getVarsTerm (x : xs)
     | isVar x       = x : getVarsTerm xs
     | isCons x      = getVarsTerm xs
     | isFunc x      = getVarsTerm (getTerms x) ++ getVarsTerm xs
+getVarsTerm _       = []
         
 -- All variables are unique, there are identified by their index.
 -- x = Var Index.
@@ -57,8 +57,8 @@ getVarsTerm (x : xs)
 -- all variables of a formula.
 
 maxIndex ::[Term] -> Int
-maxIndex [] = 0
 maxIndex (Var idx : xs) = max idx (maxIndex xs)
+maxIndex _ = 0
 
 
 -- The following method provies a Index unused for the
@@ -92,7 +92,7 @@ replace x y (Exists z f)
 -- Replaces all ocurrences of a Term X in a list of Term by the Term Y.
 
 replaceTerm :: Term -> Term -> [Term] -> [Term]
-replaceTerm x y [] = []
+replaceTerm _ _ [] = []
 replaceTerm x y (t : ts)
     | isVar t && t == x     = y : replaceTerm x y ts
     | isFunc t              = f : replaceTerm x y ts

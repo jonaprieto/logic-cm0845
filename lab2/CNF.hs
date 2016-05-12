@@ -4,7 +4,6 @@ module CNF
     where
 
 import FOL
-import Data.List
 
 -- In this module are implemented three of the four steps to get
 -- the CNF from a formula in predicate logic.
@@ -75,7 +74,7 @@ dist (Forall x f)           = Forall x $ dist f
 dist (Exists x f)           = Exists x $ dist f
 dist (Not f)                = Not $ dist f
 dist (And f g)              = And (dist f) (dist g)
-dist (Or f g)               = distOr f g
+dist (Or f g)               = distOr nf ng
     where
         nf, ng :: Formula
         nf = dist f
