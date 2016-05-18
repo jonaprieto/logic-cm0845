@@ -50,7 +50,7 @@ getVarsTerm (x : xs)
     | isCons x      = getVarsTerm xs
     | isFunc x      = getVarsTerm (getTerms x) ++ getVarsTerm xs
 getVarsTerm _       = []
-        
+
 -- All variables are unique, there are identified by their index.
 -- x = Var Index.
 -- The following method, find the maximum value for Index in
@@ -71,8 +71,8 @@ boundIndex f = maxIndex (getVars f) + 1
 
 -- The following method implements the definition 3.3.10 [van Dalen, 2013].
 -- Replaces all ocurrences of a Term x in a Formula by the Term y.
---   ∀x Px ≈ ∀y Py,
---   ∃x Px ≈ ∃y Py.
+-- ∀x Px ≈ ∀y Py,
+-- ∃x Px ≈ ∃y Py.
 
 replace :: Term -> Term -> Formula -> Formula
 replace x y (Not f)             = Not $ replace x y f
