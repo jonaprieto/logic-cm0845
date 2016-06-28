@@ -1,19 +1,19 @@
 module Unify
     where
 
-import FOL
+import           FOL
 
 unify :: Atom -> Atom -> [Atom]
-unify pp@(Pred p xs) qq@(Pred q ys)
+unify p@(Pred f xs) q@(Pred g ys)
     | condition = []
     | otherwise = solveform
     where
-        condition   = p /= q || (length xs /= length ys)
-        terms       = zip xs ys
-        rules       = unify' terms
-        newpp       = replaceWith pp rules
-        newqq       = replaceWith qq rules
-        solveform   = [newpp, newqq]
+        condition   = f /= g || (length xs /= length ys)
+        eqs         = zip xs ys
+        mgu         = unify' eqs
+        newp        = replaceWith p mgu
+        newq        = replaceWith q mgu
+        solveform   = [newp, newq]
 
 unify' :: [(Term, Term)] -> [(Term, Term)]
 unify' ((F f ts, Var x):xs) = unify' xs ++ [(Var x, F f ts)]
@@ -25,11 +25,11 @@ unify' ((F f xs, F g ys):ws)
         neweqs    = zip xs ys
 unify' ((Var x, Var y):xs)
     | x == y    = unify' xs
-    | cond = unify' newxs
+    | cond      = unify' newxs
     | otherwise = (Var x, Var y) : unify' xs
     where
-        cond  = x `elem` allVars xs
-        trans = replaceVar (Var x) (Var y) xs
+        cond  = Var x `elem` vars'' xs
+        trans = map (sub' (Var x) (Var y)) xs
         newxs = unify' [(Var x, Var y)] ++ trans
 
 unify' ((Var x, F f ts):xs)
@@ -37,38 +37,35 @@ unify' ((Var x, F f ts):xs)
     | cond2     = unify' newxs
     | otherwise = (Var x, F f ts) : unify' xs
     where
-        cond1 = x `elem` getVars ts
-        cond2 = x `elem` allVars xs
-        trans = replaceVar (Var x) (F f ts) xs
+        cond1 = Var x `elem` vars' ts
+        cond2 = Var x `elem` vars'' xs
+        trans = map (sub' (Var x) (F f ts)) xs
         newxs = unify' trans ++ [(Var x, F f ts)]
+unify' [] = []
 
-allVars :: [(Term, Term)]-> [String]
-allVars xs = getVars $ (flat . unzip) xs
-    where flat = uncurry (++)
+vars :: Term -> [Term]
+vars (Var x)    = [Var x]
+vars (F _ xs)   = vars' xs
 
-getVars :: [Term] -> [String]
-getVars (Var x : xs)    = x : getVars xs
-getVars (F _ ts : xs)   = getVars ts ++ getVars xs
+vars' :: [Term] -> [Term]
+vars' (Var x : xs)  = Var x : vars' xs
+vars' (F _ ts : xs) = vars' ts ++ vars' xs
+vars' []            = []
 
-replaceVar :: Term -> Term -> [(Term, Term)] -> [(Term, Term)]
-replaceVar x y ((z, F g ys):ws)
-    | x == z    = (y, F g newys) : replaceVar x y ws
-    | otherwise = []
-    where
-        newys = replaceVar' x y ys
+vars'' :: [(Term, Term)]-> [Term]
+vars'' = vars' . uncurry (++) . unzip
 
-replaceVar' :: Term -> Term -> [Term] -> [Term]
-replaceVar' x y (Var z:ts)
-    | x == Var z     = y : replaceVar' x y ts
-    | otherwise      = Var z : replaceVar' x y ts
-replaceVar' x y (F f xs:ts) = newf : replaceVar' x y ts
-    where
-        newf = F f (replaceVar' x y xs)
+sub :: Term -> Term -> Term -> Term
+sub (Var x) y (Var z)   = if x == z then y else Var z
+sub (Var x) y (F f ts)  = F f (map (sub (Var x) y) ts)
+sub _ _ t               = t
 
+sub' :: Term -> Term -> (Term, Term) -> (Term, Term)
+sub' x y (t1, t2) = (sub x y t1, sub x y t2)
 
 replaceWith :: Atom -> [(Term, Term)] -> Atom
-replaceWith (Pred p ts) ((x, newx):xs) = newts
+replaceWith (Pred p ts) ((x, t):xs) = newts
     where
-        newts'   = replaceVar' x newx ts
+        newts'   = map (sub x t) ts
         newts    = replaceWith (Pred p newts') xs
 replaceWith a [] = a

@@ -28,6 +28,14 @@ rx  = Pred 6 [x]
 ry  = Pred 7 [y]
 rz  = Pred 8 [z]
 
+
+-- t1 :- test(p(g(Y), f(X,h(X),Y)), p(X,f(g(Z),W,Z))).
+
+-- t2 :- test(p(g(Y), f(X,h(X),Y)), p(X,ff(g(Z),W,Z))).
+
+-- t3 :- test(p(f(Y,Z,g(Y,Z,X))), p(X)).
+
+-- t4 :- test(p(f(a,Z),g(X)), p(f(a,Y), g(g(Z)))).
 -- Test #0
 -- Input:  ∀x₀ Px₀
 -- Output: ∀x₁ Px₁
