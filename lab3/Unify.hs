@@ -46,33 +46,26 @@ unify' ((Var x, F f ts):xs)
                     Left err  -> Left err
                     Right mgu -> Right $ (Var x, F f ts) : mgu
 unify' [] = Right []
--- unify' _ = undefined
-
 
 vars :: Term -> [Term]
 vars (Var x)    = [Var x]
 vars (F _ xs)   = vars' xs
--- vars = undefined
 
 vars' :: [Term] -> [Term]
 vars' (Var x : xs)  = Var x : vars' xs
 vars' (F _ ts : xs) = vars' ts ++ vars' xs
 vars' []            = []
--- vars' = undefined
 
 vars'' :: [(Term, Term)]-> [Term]
 vars'' = vars' . uncurry (++) . unzip
--- vars'' = undefined
 
 sub :: Term -> Term -> Term -> Term
 sub (Var x) y (Var z)   = if x == z then y else Var z
 sub (Var x) y (F f ts)  = F f (map (sub (Var x) y) ts)
 sub _ _ t               = t
--- sub = undefined
 
 sub' :: Term -> Term -> (Term, Term) -> (Term, Term)
 sub' x y (t1, t2) = (sub x y t1, sub x y t2)
--- sub' = undefined
 
 replaceWith :: Atom -> [(Term, Term)] -> Atom
 replaceWith (Pred p ts) ((x, t):xs) = newts
@@ -80,4 +73,3 @@ replaceWith (Pred p ts) ((x, t):xs) = newts
         newts'   = map (sub x t) ts
         newts    = replaceWith (Pred p newts') xs
 replaceWith a [] = a
--- replaceWith = undefined

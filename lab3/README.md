@@ -1,31 +1,33 @@
-PCNF.hs
+Unify.hs
 ---
 Author: Jonathan S. Prieto. C.
 
 The file `Unify.hs` implements the unification algorithm for two atoms in
-first-order logic (FOL) given by Martelli and Montanari (1982). The algorithm
-is implemented in the function `unify`. It transforms two atoms in two new
+first-order logic (FOL) given by
+[Martelli and Montanari (1982)](http://goo.gl/SS8DeA). This algorithm
+is the function `unify`. It transforms two atoms in two new
 atoms depends on if the unification algorithm found the most general unifier.
-If this algorithm did not find out a substitution it because it does not exit,
-and then these two atoms are not unifable, in that case the function `unify`
-returns `[]`.
-
+If this algorithm did not find out a substitution, such a unifier does not exit,
+and then these two atoms are *not unifiable*, in that case, the function `unify`
+returns one of the errors of type `UnifyError` .
 
 Usage
 ---
 In the ghci console, load the library.
 
 ```Haskell
-Prelude>:load PCNF.hs
+Prelude>:load Unify.hs
 ```
-then try the following examples, the main method is `pcnf`, this method gives
+then try the following examples, the main method is `unify`, this method gives
 the prenex conjunctive normal form.
 
 ```Haskell
-Prelude> let px = Pred 0 [Var "x"]
-Prelude> let qx = Pred 1 [Var "y"]
-Prelude> unify px qx
-[Pred 0 [Var "y"], Pred 1 [Var "y"]]
+Prelude> let x = Var "x"
+Prelude> let y = Var "y"
+Prelude> let p = Pred "p" [F "g" [y], F "f" [x, F "h" [x], y]]
+Prelude> let p' = Pred "p" [x, F "f" [F "g" [z], w, z]]
+Prelude> unify p p'
+Right [p[g[z],f[g[z],h[g[z]],z]],p[g[z],f[g[z],h[g[z]],z]]]
 ```
 
 More cases can be found in the test file (`Test.hs`).
