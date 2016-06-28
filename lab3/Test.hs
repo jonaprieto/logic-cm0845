@@ -7,47 +7,58 @@ import Test.HUnit
 
 import FOL
 import Unify
--- x₀,x₁,x₂
-x,y,z :: Term
-x   = Var 0
-y   = Var 1
-z   = Var 2
 
--- Px₀, Px₁, Px₂
-px  = Pred 0 [x]
-py  = Pred 1 [y]
-pz  = Pred 2 [z]
+x,y,z, t1, t2, t3 :: Term
+x   = Var "x"
+y   = Var "y"
+z   = Var "z"
+w   = Var "w"
 
--- Qx₀, Qx₁, Qx₂
-qx  = Pred 3 [x]
-qy  = Pred 4 [y]
-qz  = Pred 5 [z]
+t1 = F "g" [y]
+t2 = F "f" [x, F "h" [x], y]
+t3 = F "f" [F "g" [z], w, z]
 
--- Rx₀, Rx₁, Rx₂
-rx  = Pred 6 [x]
-ry  = Pred 7 [y]
-rz  = Pred 8 [z]
+p, p' :: Atom
+p    = Pred "p" [F "g" [y], F "f" [x, F "h" [x], y]]
+p'   = Pred "p" [x,  F "f" [F "g" [z], w, z]]
+ansp = Right [
+    Pred "p" [
+        F "g" [Var "z"],
+        F "f" [F "g" [Var "z"],F "h" [F "g" [Var "z"]],Var "z"]],
+    Pred "p" [
+        F "g" [Var "z"],
+        F "f" [F "g" [Var "z"],F "h" [F "g" [Var "z"]],Var "z"]]
+]
+t1  = TestCase (assertEqual "p p'" (unify p p') ansp)
 
+q, q' :: Atom
+q    = Pred "p" [F "f" [y, z, F "g" [y, z, x]]]
+q'   = Pred "p" [x]
+ansq = Left FailRule4
+t2   = TestCase (assertEqual "q q'" (unify q q') ansq)
 
--- t1 :- test(p(g(Y), f(X,h(X),Y)), p(X,f(g(Z),W,Z))).
+r, r' :: Atom
+r    = Pred "p" [F "f" [z], F "g" [x]]
+r'   = Pred "p" [F "f" [y], F "g" [F "g" [z]]]
+ansr = Right [
+    Pred "p" [
+        F "f" [Var "y"],
+        F "g" [F "g" [Var "y"]]],
+    Pred "p" 
+        [F "f" [Var "y"],
+        F "g" [F "g" [Var "y"]]]
+]
+t3   = TestCase (assertEqual "r r'" (unify r r') ansr)
 
--- t2 :- test(p(g(Y), f(X,h(X),Y)), p(X,ff(g(Z),W,Z))).
+a, b, c, d :: Atom
+a   = Pred "a" [x]
+b   = Pred "b" [x]
+c   = Pred "a" [x,y]
+d   = Pred "a" [y]
+tpred   = TestCase (assertEqual "dpred" (unify a b) (Left DifferentPred))
+tarity  = TestCase (assertEqual "darity" (unify a c) (Left DifferentPredArity))
 
--- t3 :- test(p(f(Y,Z,g(Y,Z,X))), p(X)).
+ans3 = Right [Pred "a" [Var "y"],Pred "a" [Var "y"]]
+tbasic  = TestCase (assertEqual "basic1" (unify a d) ans3)
 
--- t4 :- test(p(f(a,Z),g(X)), p(f(a,Y), g(g(Z)))).
--- Test #0
--- Input:  ∀x₀ Px₀
--- Output: ∀x₁ Px₁
-
-
--- Test #1
--- Input:  ¬ ∃x₀ Px₀ → (∀×ₒ Pxₒ)
--- Output: ∀x₂ ∃x₁ (Px₂ ∧ ¬ Px₁)
-
--- a =
--- b =
--- r =
--- test1   = TestCase (assertEqual "f1" (unify a b) r)
-
--- tests  = TestList [test1]
+tests  = TestList [t1,t2,t3,tpred,tarity,tbasic]
