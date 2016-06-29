@@ -63,4 +63,19 @@ ans3 = Right [Pred "a" [Var "y"],Pred "a" [Var "y"]]
 tbasic  = TestCase (
         assertEqual "basic1" (unify a d) ans3)
 
-tests  = TestList [t1,t2,t3,tpred,tarity,tbasic]
+-- other examples taken from Ben-ari's Book, Pag. 202.
+ua1 = Pred "p" [w, x, F "f" [F "g" [y]]]
+ua2 = Pred "p" [y, F "f" [z], F "f" [z]]
+ub1 = Pred "p" [x, F "g" [F "f" [w]], F "f" [x]]
+
+ub2 = Pred "p" [F "f" [w], y, y]
+tub = TestCase ( assertEqual "tub" (unify ub1 ub2) (Left DifferentFn))
+
+uc1 = Pred "p" [x, F "g" [F "f" [w]], F "f" [x]]
+uc2 = Pred "p" [F "f" [y], z, y]
+tuc = TestCase ( assertEqual "tuc" (unify uc1 uc2) (Left FailRule4))
+
+ud1 = Pred "p" [w, x, F "f" [F "g" [y]]]
+ud2 = Pred "p" [z, F "h" [z,Var "u"],F "f" [Var "u"]]
+
+tests = TestList [t1,t2,t3,tpred,tarity,tbasic,tub, tuc]
