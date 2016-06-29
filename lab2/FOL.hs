@@ -1,5 +1,7 @@
--- @Author: JONATHAN STEVEN PRIETO CUBIDES
--- @Date:   2016-04-23 00:21:26
+-- @Author: Jonathan Prieto
+-- @Date:   2016-05-27 03:24:21
+-- @Last Modified by:   Jonathan Prieto
+-- @Last Modified time: 2016-06-28 19:12:58
 
 module FOL
   where

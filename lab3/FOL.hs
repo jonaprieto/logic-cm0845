@@ -1,3 +1,7 @@
+-- @Author: Jonathan Prieto
+-- @Date:   2016-06-28 17:18:00
+-- @Last Modified by:   Jonathan Prieto
+-- @Last Modified time: 2016-06-28 19:13:27
 module FOL where
 
 type Ft = String

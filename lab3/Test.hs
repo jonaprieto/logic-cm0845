@@ -1,6 +1,7 @@
--- @Author: JONATHAN STEVEN PRIETO CUBIDES
--- @Date: 2016-04-17 13:53:04
-
+-- @Author: Jonathan Prieto
+-- @Date:   2016-06-28 18:06:43
+-- @Last Modified by:   Jonathan Prieto
+-- @Last Modified time: 2016-06-28 19:12:12
 module Test
     where
 import           Test.HUnit
@@ -66,8 +67,8 @@ tbasic  = TestCase (
 -- other examples taken from Ben-ari's Book, Pag. 202.
 ua1 = Pred "p" [w, x, F "f" [F "g" [y]]]
 ua2 = Pred "p" [y, F "f" [z], F "f" [z]]
-ub1 = Pred "p" [x, F "g" [F "f" [w]], F "f" [x]]
 
+ub1 = Pred "p" [x, F "g" [F "f" [w]], F "f" [x]]
 ub2 = Pred "p" [F "f" [w], y, y]
 tub = TestCase ( assertEqual "tub" (unify ub1 ub2) (Left DifferentFn))
 
