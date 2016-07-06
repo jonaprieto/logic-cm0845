@@ -5,11 +5,19 @@ Author: Jonathan S. Prieto. C.
 The file `Unify.hs` implements the unification algorithm for two atoms in
 first-order logic (FOL) given by
 [Martelli and Montanari (1982)](http://goo.gl/SS8DeA). This algorithm
-is the function `unify`. It transforms two atoms in two new
-atoms depends on if the unification algorithm found the most general unifier.
-If this algorithm did not find out a substitution, such a unifier does not exit,
-and then these two atoms are *not unifiable*, in that case, the function `unify`
-returns one of the errors of type `UnifyError` .
+is the function `unify`. It transforms two atoms in two new atoms as long
+as the unification algorithm found the most general unifier (`mgu`).
+When the algorithm reports some failure such a unifier does not exit, and
+we call that these atoms are *not unifiable*.
+In that case, the function `unify` returns an error of type `UnifyError`.
+We have four possible failure, each of one associated with the steps in
+the algorithm.
+
+- `DifferentPredArity`
+- `DifferentFn`
+- `DifferentFnArity`
+- `FailRule4`
+
 
 Usage
 ---
@@ -18,8 +26,9 @@ In the ghci console, load the library.
 ```Haskell
 Prelude>:load Unify.hs
 ```
-then try the following examples, the main method is `unify`, this method gives
-the prenex conjunctive normal form.
+then try the following examples, the main method is `unify`.
+When it succeed, it shows you a list with the original after apply
+the substitution `mgu`.
 
 ```Haskell
 Prelude> let x = Var "x"
@@ -41,15 +50,17 @@ Prelude> :load test
 *Test> runTestTT tests
 Cases: 6  Tried: 6  Errors: 0  Failures: 0
 Counts {cases = 6, tried = 6, errors = 0, failures = 0}
+*Test> unify a b
+Left The atoms have different predicates.
 ```
-Use the base cases:
+Use the eight base cases:
 
 ```
 runTestTT tests
 ```
 
 If you don't have `hunit` library, you can go for it and install it as
-follows. In your console, invoke cabal.
+follows. In your console, invoke `cabal`.
 
 ```Haskell
 cabal install hunit
