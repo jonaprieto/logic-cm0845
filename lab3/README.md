@@ -2,7 +2,7 @@ Unify.hs
 ---
 Author: Jonathan S. Prieto. C.
 
-The file `Unify.hs` implements the unification algorithm for two atoms in
+The file `Unification.hs` implements the unification algorithm for two atoms in
 first-order logic (FOL) given by
 [Martelli and Montanari (1982)](http://goo.gl/SS8DeA). This algorithm
 is the function `unify`. It transforms two atoms in two new atoms as long
@@ -24,7 +24,7 @@ Usage
 In the ghci console, load the library.
 
 ```Haskell
-Prelude>:load Unify.hs
+Prelude>:load Unification.hs
 ```
 then try the following examples, the main method is `unify`.
 When it succeed, it shows you a list with the original after apply
@@ -38,6 +38,12 @@ Prelude> let p' = Pred "p" [x, F "f" [F "g" [z], w, z]]
 Prelude> unify p p'
 Right [p[g[z],f[g[z],h[g[z]],z]],p[g[z],f[g[z],h[g[z]],z]]]
 ```
+
+As we can see above, the output is pretty formatted in the interactive
+console. The output of the method unify is the type `UnifyResult`, an
+abbreviation of `Either UnifyError`. We always get an answer with the
+prefix `Right` if the function succeed, or with the prefix `Left` if
+something was wrong.
 
 More cases can be found in the test file (`Test.hs`).
 

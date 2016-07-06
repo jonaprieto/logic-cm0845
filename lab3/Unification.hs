@@ -1,8 +1,8 @@
 -- @Author: Jonathan Prieto
 -- @Date:   2016-06-28 11:10:10
 -- @Last Modified by:   Jonathan Prieto
--- @Last Modified time: 2016-07-06 16:40:24
-module Unify
+-- @Last Modified time: 2016-07-06 16:49:09
+module Unification
     where
 
 import           FOL

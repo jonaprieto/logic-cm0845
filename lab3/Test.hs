@@ -1,13 +1,13 @@
 -- @Author: Jonathan Prieto
 -- @Date:   2016-06-28 18:06:43
 -- @Last Modified by:   Jonathan Prieto
--- @Last Modified time: 2016-06-28 19:12:12
+-- @Last Modified time: 2016-07-06 16:49:25
 module Test
     where
 import           Test.HUnit
 
 import           FOL (Atom(..), Term(..))
-import           Unify (unify, UnifyError(..))
+import           Unification (unify, UnifyError(..))
 
 x,y,z,w:: Term
 x   = Var "x"
