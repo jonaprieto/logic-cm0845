@@ -65,3 +65,4 @@ follows. In your console, invoke `cabal`.
 ```Haskell
 cabal install hunit
 ```
+Note: This code was tested in GHCi, version 8.0.1.
