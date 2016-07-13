@@ -1,4 +1,4 @@
-Unify.hs
+Unification.hs
 ---
 Author: Jonathan S. Prieto. C.
 
