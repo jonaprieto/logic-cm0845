@@ -7,16 +7,16 @@ first-order logic (FOL) given by
 [Martelli and Montanari (1982)](http://goo.gl/SS8DeA). This algorithm
 is the function `unify`. It transforms two atoms in two new atoms as long
 as the unification algorithm found the most general unifier (`mgu`).
-When the algorithm reports some failure such a unifier does not exit, and
-we call that these atoms are *not unifiable*.
-In that case, the function `unify` returns an error of type `UnifyError`.
-We have four possible failure, each of one associated with the steps in
+Sometimes the algorithm reports some failure, in such a case, the unifier does not exit and
+we call then that the atoms are *not unifiable*.
+When that occurs the function `unify` yield an error of type `UnifyError`.
+The error has four possible types, each of them associate with the steps in
 the algorithm.
 
-- `DifferentPredArity`
-- `DifferentFn`
-- `DifferentFnArity`
-- `FailRule4`
+- `DifferentPred`: The atoms have different predicates.
+- `DifferentFn`: It found two different function in one equation.
+- `DifferentFnArity`: It found the same function with two arities.
+- `FailRule4`: The equation x=t reports x occurred in t, and x!=t.
 
 
 Usage
