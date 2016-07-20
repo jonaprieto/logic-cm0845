@@ -4,6 +4,7 @@
 %% Date: 6/03/16
 %% Course: Logic-CM0845
 %% Basic syntax: cnf(A,B). B is the cnf form for the formula A.
+%% Please see https://github.com/Besulba/Prolog-CNF for a better work of this.
 %%
 
 
